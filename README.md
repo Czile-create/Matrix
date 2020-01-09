@@ -15,7 +15,7 @@ n,m represent the number of line(somebody may call it as 'row') and list.
 ### 4. To do some advanced operations:
   Here are a list of operations you can use:  
   
-        `Basic operationsa:
+        `/*Basic operations*/
         void swap_rows(const int,const int);  
         void row_product_a_const(const int,const double);  
         void add_line_i_to_line_j(const int,const int,const double=1);  
