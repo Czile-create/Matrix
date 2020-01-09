@@ -1,5 +1,6 @@
 # Matrix
-A C++ class for matrix, containing function such as inverse,det,rank,echelon and several operations for matrix.
+A C++ class for matrix, containing function such as inverse,det,rank,echelon and several operations for matrix.  
+(Just a single head file)
 ## How to use?
 ### 1. Define a matrix: 
 ` matrix p(n,m); `  
