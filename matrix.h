@@ -370,7 +370,7 @@ matrix matrix::echelon()
 }
 matrix matrix::inverse()
 {
-    if (n!=m||r!=n) {
+    if (n!=m||rank()!=n) {
         cerr<<"No inverse matrix!"<<endl;
         exit(0);
     }
@@ -431,4 +431,5 @@ matrix matrix::calculate_multiplys(const matrix base,const int a)
         return calculate_multiplys(base,a/2)^2;
     return base*calculate_multiplys(base,a/2)^2;
 }
+
 #endif
