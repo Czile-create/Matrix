@@ -6,11 +6,16 @@ A C++ class for matrix, containing function such as inverse,det,rank,echelon and
 ` matrix p(n,m); `  
 n,m represent the number of line(somebody may call it as 'row') and list.
 ### 2. To read/print a matrix: 
-`#include <iostream>
- std::cin>>p;
- std::cout<<p;`
+` #include <iostream>  
+  std::cin>>p;  
+  std::cout<<p;  `
 ### 3. To do some operations: 
-  `p1+p2,p1-p2,p1*p2,p1*const,p1/const,p1^const`  
+  ``p1+p2,  
+   p1-p2,  
+   p1*p2,  
+   p1*const,  
+   p1/const,  
+   p1^const   ``  
   All these operation can be used.
 ### 4. To do some advanced operations:
   Here are a list of operations you can use:  
