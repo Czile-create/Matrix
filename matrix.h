@@ -1,6 +1,6 @@
 /*
     matrix.h
-    copyright Purelight. Chan Zee Lok.
+    copyright (c) 2020 -     Purelight. Chan Zee Lok.
 */
 
 #ifndef _MATRIX_H_
@@ -402,6 +402,10 @@ int matrix::rank()
 }
 double * matrix::operator[](const int a)
 {
+    if (a>=n||a<0){
+        cerr<<"Error! You have no access to the position!"<<endl;
+        exit(0);
+    }
     return p[a];
 }
 void matrix::calculate_rank()
