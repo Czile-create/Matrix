@@ -3,24 +3,34 @@ A C++ class for matrix, containing function such as inverse,det,rank,echelon and
 (Just a single head file)
 ## How to use?
 ### 1. Define a matrix: 
-` matrix p(n,m); `  
+
+```cpp
+ matrix p(n,m); 
+``` 
 n,m represent the number of line(somebody may call it as 'row') and list.
 ### 2. To read/print a matrix: 
-` #include <iostream>  
+
+```cpp
+  #include <iostream>  
   std::cin>>p;  
-  std::cout<<p;  `
-### 3. To do some operations: 
-  ``p1+p2,  
-   p1-p2,  
-   p1*p2,  
-   p1*const,  
-   p1/const,  
-   p1^const   ``  
-  All these operation can be used.
+  std::cout<<p;  
+```
+### 3. To do some operations:
+
+```cpp
+  p1+p2,  
+  p1-p2,  
+  p1*p2,  
+  p1*const,  
+  p1/const,  
+  p1^const
+```
+   All these operation can be used.
 ### 4. To do some advanced operations:
   Here are a list of operations you can use:  
   
-        `/*Basic operations*/
+```cpp
+        /*Basic operations*/
         void swap_rows(const int,const int);  
         void row_product_a_const(const int,const double);  
         void add_line_i_to_line_j(const int,const int,const double=1);  
@@ -39,7 +49,7 @@ n,m represent the number of line(somebody may call it as 'row') and list.
         double det();//行列式
         int rank();//秩
         double * operator[](const int);
-    ` 
+```
         
 ## LICENSE
   Please see the file "License"
