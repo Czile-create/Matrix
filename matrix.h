@@ -7,7 +7,7 @@
 #define _MATRIX_H_
 
 #include <iostream>
-#include <math.h>
+#include <string>
 using namespace std;
 class matrix {
     public:
@@ -16,10 +16,12 @@ class matrix {
         matrix();
         matrix(int,int,double **);
         matrix(const matrix &);
+        matrix(const string,const int,const int=0,const int=0,const int=0,const int=0);
         matrix & operator=(const matrix &);
+        ~matrix();
         /*iostream*/
-        friend istream &operator>>(istream &,matrix &);
-        friend ostream &operator<<(ostream &,matrix &);
+        friend istream & operator>>(istream &,matrix &);
+        friend ostream & operator<<(ostream &,matrix &);
         /*operator*/
         friend matrix operator+(const matrix &,const matrix &);
         friend matrix operator-(const matrix &,const matrix &);
@@ -51,6 +53,8 @@ class matrix {
         double det();//行列式
         int rank();//秩
         double * operator[](const int);
+        double trace();//迹
+        int dim();
     private:
         int n,m; //size of the matrix
         int r; //rank of the matrix
@@ -91,6 +95,10 @@ matrix::matrix(int a,int b):
 matrix::matrix(int a,int b,double ** c):
     n(a),m(b)
 {
+    if (a<=0||b<=0) {
+        cerr<<"Cannot alloc an matrix that has negative numbers of line or list!"<<endl;
+        exit(0);
+    }
     alloc();
     for (int i=0; i<n; i++)
         for (int j=0; j<m; j++)
@@ -103,6 +111,67 @@ matrix::matrix(const matrix & a):
     for (int i=0; i<n; i++)
         for (int j=0; j<m; j++)
             p[i][j]=a.p[i][j];
+}
+matrix::matrix(const string s,const int a,const int b,const int k,const int l,const int q):
+    n(a),m(b)
+{
+    if (s=="Identity") {
+        if (n<=0) {
+            cerr<<"Cannot alloc an Identity that has negative number of line & list."<<endl;
+            exit(0);
+        }
+        m=n;
+        alloc();
+        for (int i=0; i<n; i++)
+            for (int j=0; j<n; j++)
+                if (i==j)
+                    p[i][j]=1;
+                else
+                    p[i][j]=0;
+        r=n;
+    }
+    else if (s=="Zero") {
+        if (a<=0||b<=0) {
+            cerr<<"Cannot alloc an matrix that has negative numbers of line or list!"<<endl;
+            exit(0);
+        }
+        alloc();
+        for (int i=0; i<n; i++)
+            for (int j=0; j<m; j++)
+                p[i][j]=0;
+        r=0;
+    }
+    else if (s=="Basic") {
+        if (a<=0||b<=0||k<=0||l<=0||k>a||k>b) {
+            cerr<<"Error when alloc a basic matrix! "<<endl;
+            exit(0);
+        }
+        alloc();
+        for (int i=0; i<n; i++)
+            for (int j=0; j<m; j++)
+                p[i][j]=0;
+        p[k+1][l+1]=1;
+        r=1;
+    }
+    else if (s=="scalar") {
+        if (n<=0) {
+            cerr<<"Cannot alloc an Identity that has negative number of line & list."<<endl;
+            exit(0);
+        }
+        m=n;
+        alloc();
+        for (int i=0; i<n; i++)
+            for (int j=0; j<n; j++)
+                if (i==j)
+                    p[i][j]=q;
+                else
+                    p[i][j]=0;
+        r=n;
+    }
+}
+matrix::~matrix()
+{
+    clear();
 }
 matrix & matrix::operator=(const matrix & a)
 {
@@ -118,17 +187,17 @@ matrix & matrix::operator=(const matrix & a)
 }
 
 /*function for iostream*/
-istream &operator>>(istream &input,matrix &a)
+istream & operator>>(istream & input,matrix & a)
 {
-    for (int i=0;i<a.n;i++)
-        for (int j=0;j<a.m;j++)
+    for (int i=0; i<a.n; i++)
+        for (int j=0; j<a.m; j++)
             input>>a[i][j];
     return input;
 }
-ostream &operator<<(ostream &output,matrix &a)
+ostream & operator<<(ostream & output,matrix & a)
 {
-    for (int i=0;i<a.n;i++){
-        for (int j=0;j<a.m;j++)
+    for (int i=0; i<a.n; i++) {
+        for (int j=0; j<a.m; j++)
             output<<a.p[i][j]<<' ';
         output<<endl;
     }
@@ -375,8 +444,8 @@ matrix matrix::inverse()
         exit(0);
     }
     matrix temp(n,m);
-    for (int i=0;i<n;i++)
-        for (int j=0;j<m;j++)
+    for (int i=0; i<n; i++)
+        for (int j=0; j<m; j++)
             temp[i][j]=algebraic_cofactor(j+1,i+1);
     return temp/det();
 }
@@ -402,11 +471,26 @@ int matrix::rank()
 }
 double * matrix::operator[](const int a)
 {
-    if (a>=n||a<0){
+    if (a>=n||a<0) {
         cerr<<"Error! You have no access to the position!"<<endl;
         exit(0);
     }
     return p[a];
+}
+double matrix::trace()
+{
+    if (n!=m) {
+        cerr<<"Error! The matrix has no trace! "<<endl;
+        exit(0);
+    }
+    int ans=0;
+    for (int i=0; i<n; i++)
+        ans+=p[i][i];
+    return ans;
+}
+int matrix::dim()
+{
+    return n*m;
 }
 void matrix::calculate_rank()
 {
@@ -415,10 +499,10 @@ void matrix::calculate_rank()
         r=0;
     r=0;
     int pre=-1,now=0;
-    for (int i=0;i<n;i++){
+    for (int i=0; i<n; i++) {
         while (now<=m&&temp[i][now]==0)
             now++;
-        if (now!=pre){
+        if (now!=pre) {
             pre=now;
             r++;
         }
@@ -429,11 +513,10 @@ matrix matrix::calculate_multiplys(const matrix base,const int a)
 {
     if (a==1)
         return base;
-	if (a == 2)
-		return base * base;
+    if (a == 2)
+        return base * base;
     if (a%2==0)
         return calculate_multiplys(base,a/2)^2;
     return base*calculate_multiplys(base,a/2)^2;
 }
-
 #endif
