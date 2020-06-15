@@ -22,7 +22,7 @@ class matrix {
         ~matrix();
         /*iostream*/
         friend istream & operator>>(istream &,matrix &);
-        friend ostream & operator<<(ostream &,matrix &);
+        friend ostream & operator<<(ostream &,matrix );
         /*operator*/
         friend matrix operator+(const matrix &,const matrix &);
         friend matrix operator-(const matrix &,const matrix &);
@@ -196,7 +196,7 @@ istream & operator>>(istream & input,matrix & a)
             input>>a[i][j];
     return input;
 }
-ostream & operator<<(ostream & output,matrix & a)
+ostream & operator<<(ostream & output,matrix a)
 {
     for (int i=0; i<a.n; i++) {
         for (int j=0; j<a.m; j++)
