@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <string>
+#include <math.h>
 using namespace std;
 class matrix {
     public:
@@ -29,6 +30,7 @@ class matrix {
         friend matrix operator*(const matrix &,const double &);
         friend matrix operator*(const double &,const matrix &);
         friend matrix operator/(const matrix &,const double &);
+        friend bool operator==(matrix &,matrix &);
         /*self_operation*/
         matrix & operator+=(const matrix &);
         matrix & operator-=(const matrix &);
@@ -205,6 +207,16 @@ ostream & operator<<(ostream & output,matrix & a)
 }
 
 /*function for self-operation of matrix*/
+bool operator==(matrix & a, matrix & b)
+{
+    if (a.n!=b.n||a.m!=b.m)
+        return false;
+    for (int i=0; i<a.n; i++)
+        for (int j=0; j<a.m; j++)
+            if (a[i][j]!=b[i][j])
+                return false;
+    return true;
+}
 matrix & matrix::operator+=(const matrix & a)
 {
     if (n!=a.n||m!=a.m) {
@@ -322,7 +334,7 @@ void matrix::row_product_a_const(const int a,const double b) //ath row * b
     }
     for (int k=0; k<m; k++) {
         p[a-1][k]*=b;
-        if (p[a-1][k]==-0)
+        if (p[a-1][k]==-0||p[a-1][k]==NAN)
             p[a-1][k]=0;
     }
 }
@@ -334,7 +346,7 @@ void matrix::add_line_i_to_line_j(const int a,const int b,const double c)
     }
     for (int k=0; k<m; k++) {
         p[b-1][k]+=c*p[a-1][k];
-        if (p[b-1][k]==-0)
+        if (p[b-1][k]==-0||p[b-1][k]==NAN)
             p[b-1][k]=0;
     }
 }
@@ -358,7 +370,7 @@ void matrix::list_product_a_const(const int a,const double b) //ath row * b
     }
     for (int k=0; k<n; k++) {
         p[k][a-1]*=b;
-        if (p[k][a-1]==-0)
+        if (p[k][a-1]==-0||p[k][a-1]==NAN)
             p[k][a-1]=0;
     }
 }
@@ -370,7 +382,7 @@ void matrix::add_list_i_to_list_j(const int a,const int b,const double c) //j=j+
     }
     for (int k=0; k<n; k++) {
         p[k][b-1]+=c*p[k][a-1];
-        if (p[k][b-1]==-0)
+        if (p[k][b-1]==-0||p[k][b-1]==NAN)
             p[k][b-1]=0;
     }
 }
@@ -433,7 +445,8 @@ matrix matrix::echelon()
         int j=i;
         while (temp.p[i][j]==0)
             j++;
-        temp.row_product_a_const(i+1,1.0/temp.p[i][j]);
+        if (j<n)
+            temp.row_product_a_const(i+1,1.0/temp.p[i][j]);
     }
     return temp;
 }
